@@ -75,6 +75,25 @@ LOW_BANDWIDTH  = int(float(settings.getSetting("bandwidth")))
 HIGH_BANDWIDTH = svt.getHighBw(LOW_BANDWIDTH)
 LOW_BANDWIDH   = LOW_BANDWIDTH
 
+"""
+Error messages to display when no stream was found
+"""
+ERRORMSG_UNDEFINED = 0
+ERRORMSG_NOSTREAMFOUND = 1
+ERRORMSG_NOSTREAMFORBW = 2
+ERRORMSG_NOSTREAMFORATV = 3
+
+ERROR_STATE = None
+
+ERROR_CODES = [ERRORMSG_UNDEFINED, 
+              ERRORMSG_NOSTREAMFOUND, 
+              ERRORMSG_NOSTREAMFORBW,
+              ERRORMSG_NOSTREAMFORATV]
+ERROR_MSGS = { ERRORMSG_UNDEFINED : 30199, 
+              ERRORMSG_NOSTREAMFOUND : 30100, 
+              ERRORMSG_NOSTREAMFORBW : 30107,
+              ERRORMSG_NOSTREAMFORATV : 30108 }
+
 def viewStart():
 
   addDirectoryItem(localize(30008), { "mode": MODE_CHANNELS })
@@ -151,7 +170,7 @@ def viewLatest(mode,page,index):
 def viewCategory(url,page,index):
   if url == svt.URL_TO_OA:
     dialog = xbmcgui.Dialog()
-    dialog.ok("SVT Play", localize(30107))
+    dialog.ok("SVT Play", localize(30109))
     viewStart()
     return 
   createDirectory(url,page,index,MODE_CATEGORY,MODE_PROGRAM)
@@ -477,6 +496,7 @@ def startVideo(url):
   if extension == "None" and videoUrl:
     # No supported video was found
     common.log("No supported video extension found for URL: " + videoUrl)
+    setError(ERRORMSG_NOSTREAMFOUND)
     videoUrl = None
 
   if videoUrl:
@@ -500,10 +520,8 @@ def startVideo(url):
       if not SHOW_SUBTITLES:
         player.showSubtitles(False)
   else:
-    # No video URL was found
-    dialog = xbmcgui.Dialog()
-    dialog.ok("SVT PLAY", localize(30100))
-
+    # No valid video URL was found
+    showError()
 
 def mp4Handler(jsonObj):
   """
@@ -552,7 +570,6 @@ def hlsStrip(videoUrl):
     ufile = urllib.urlopen(videoUrl)
     lines = ufile.readlines()
 
-    newplaylist = "#EXTM3U\n"
     hlsurl = ""
     bandwidth = 0
     foundhigherquality = False
@@ -564,7 +581,7 @@ def hlsStrip(videoUrl):
         hlsurl = line
       if "EXT-X-STREAM-INF" in line: # The header
         if not "avc1.77.30" in line:
-          match = re.match(r'.*BANDWIDTH=(\d+).+',line)
+          match = re.match(r'.*BANDWIDTH=(\d+).+', line)
           if match:
             if bandwidth < int(match.group(1)):
               foundhigherquality = True
@@ -572,6 +589,8 @@ def hlsStrip(videoUrl):
           continue
 
     if bandwidth == 0:
+      common.log("No non-avc1.77.30 stream found")
+      setError(ERRORMSG_NOSTREAMFORATV)
       return None
 
     ufile.close()
@@ -590,6 +609,7 @@ def getStream(url):
   
   marker = "#EXT-X-STREAM-INF"
   found = False
+  hlsurl = ""
 
   for line in lines:
     if found:
@@ -604,9 +624,14 @@ def getStream(url):
           found = True
   
   f.close()
-  hlsurl = hlsurl.rstrip()
-  common.log("Returned stream url: " + hlsurl)
-  return hlsurl
+  if found:
+    hlsurl = hlsurl.rstrip()
+    common.log("Returned stream url: " + hlsurl)
+    return hlsurl
+  else:
+    common.log("Could not find stream for bandwidth " + str(LOW_BANDWIDTH))
+    setError(ERRORMSG_NOSTREAMFORBW)
+    return None
 
 
 def addDirectoryItem(title, params, thumbnail = None, folder = True, live = False, info = None):
@@ -627,6 +652,30 @@ def addDirectoryItem(title, params, thumbnail = None, folder = True, live = Fals
 
   xbmcplugin.addDirectoryItem(pluginHandle, sys.argv[0] + '?' + urllib.urlencode(params), li, folder)
 
+def setError(errorcode = None):
+  """"
+  Sets the global error code used when raising an error dialog
+  """
+  if errorcode in ERROR_CODES or errorcode == None:
+    global ERROR_STATE
+    ERROR_STATE = errorcode
+  else:
+    common.log("Undefined error code " + str(errorcode))
+    global ERROR_STATE
+    ERROR_STATE = ERROR_UNDEFINED
+  common.log("New error state: " + str(ERROR_STATE))
+  return
+
+def showError():
+  """
+  Shows an OK dialog with the error message corresponding
+  to the current error state
+  """
+  if ERROR_STATE:
+    dialog = xbmcgui.Dialog()
+    dialog.ok("SVT PLAY", localize(ERROR_MSGS[ERROR_STATE]))
+    setError()
+  return
 
 params = helper.getUrlParameters(sys.argv[2])
 

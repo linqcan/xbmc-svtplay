@@ -16,7 +16,10 @@
   <string id="30104">Program</string>
   <string id="30105">Avsnitt</string>
   <string id="30106">Klipp</string>
-  <string id="30107">Installera Öppet Arkiv tillägget för att se dessa program</string>
+  <string id="30107">Ingen videoström hittades för vald bandbredd</string>
+  <string id="30108">Ingen videoström utan avc1.77.30 codec hittades</string>
+  <string id="30109">Installera Öppet Arkiv tillägget för att se dessa program</string>
+  <string id="30199">Vi beklagar men ett odefinerat fel har inträffat. Se logg för mer information</string>
   <string id="30500">Debug</string>
   <string id="30501">Visa undertexter</string>
   <string id="30502">Gruppera program i A-Ö efter första bokstav</string>

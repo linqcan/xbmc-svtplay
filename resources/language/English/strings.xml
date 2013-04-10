@@ -16,7 +16,10 @@
   <string id="30104">Programs</string>
   <string id="30105">Episodes</string>
   <string id="30106">Clips</string>
-  <string id="30107">Install the Öppet Arkiv addon to view these programs</string>
+  <string id="30107">No stream found for the manually set bandwidth</string>
+  <string id="30108">No non-avc1.77.30 stream found</string>
+  <string id="30109">Install the Öppet Arkiv addon to view these programs</string>
+  <string id="30199">We are sorry. An undefined error occured. See log for more info</string>
   <string id="30500">Debug</string>
   <string id="30501">Show subtitles</string>
   <string id="30502">Group programs in A-Ö by first character</string>
