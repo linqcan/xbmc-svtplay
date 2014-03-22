@@ -12,6 +12,7 @@ import CommonFunctions as common
 import resources.lib.bestofsvt as bestof
 import resources.lib.helper as helper
 import resources.lib.svt as svt
+import resources.lib.PlaylistManager as PlaylistManager
 
 MODE_CHANNELS = "kanaler"
 MODE_A_TO_O = "a-o"
@@ -34,6 +35,7 @@ MODE_BESTOF_CATEGORY = "bestofcategory"
 MODE_VIEW_TITLES = "view_titles"
 MODE_VIEW_EPISODES = "view_episodes"
 MODE_VIEW_CLIPS = "view_clips"
+MODE_PLAYLIST_MANAGER = "playlist-manager"
 
 S_DEBUG = "debug"
 S_HIDE_SIGN_LANGUAGE = "hidesignlanguage"
@@ -62,8 +64,25 @@ def viewStart():
   addDirectoryItem(localize(30001), { "mode": MODE_CATEGORIES })
   addDirectoryItem(localize(30007), { "mode": MODE_BESTOF_CATEGORIES })
   addDirectoryItem(localize(30006), { "mode": MODE_SEARCH })
+  addDirectoryItem("Manage playlist", { "mode": MODE_PLAYLIST_MANAGER, "action": "view"})
 
 
+def viewManagePlaylist(action):
+  
+  if action == "view":
+    items = PlaylistManager.getListItems()
+    for item in items:
+      addDirectoryItem(item["title"], { "mode": MODE_PLAYLIST_MANAGER, "action": "none"}, folder=False)
+    addDirectoryItem("Clear list", { "mode": MODE_PLAYLIST_MANAGER, "action": "clear"})
+    addDirectoryItem("Play list", { "mode": MODE_PLAYLIST_MANAGER, "action": "play"})
+  elif action == "clear":
+    # Hacky hack
+    common.log("Clear playlist")
+    PlaylistManager.clear()
+    xbmcplugin.endOfDirectory(PLUGIN_HANDLE, updateListing=True)
+  elif action == "play":
+    PlaylistManager.play()
+  
 def viewAtoO():
   programs = svt.getAtoO()
   
@@ -250,12 +269,8 @@ def startVideo(url):
   if not url.startswith("/"):
     url = "/" + url
 
-  url = url + svt.JSON_SUFFIX
-  html = svt.getPage(url)
-
-  json_string = common.replaceHTMLCodes(html)
-  json_obj = json.loads(json_string)
-  common.log(json_string)
+  url = svt.BASE_URL + url + svt.JSON_SUFFIX
+  json_obj = helper.getJsonObj(url)
 
   video_url = helper.getVideoUrl(json_obj)
   errormsg = None
@@ -314,7 +329,21 @@ def addDirectoryItem(title, params, thumbnail = None, folder = True, live = Fals
     li.setProperty("IsLive", "true")
 
   if not folder:
-    li.setProperty("IsPlayable", "true")
+    if params["mode"] == MODE_VIDEO:
+      li.setProperty("IsPlayable", "true")
+      # Add context menu item for adding a video to playlist
+      plm_script = "special://home/addons/plugin.video.svtplay/resources/lib/PlaylistManager.py"
+      plm_action = "add"
+      if not thumbnail:
+        thumnail= ""
+      li.addContextMenuItems(
+            [
+              (
+                "Add to playlist",
+                "XBMC.RunScript("+plm_script+", "+plm_action+", "+params["url"]+", "+title+", "+thumbnail+")"
+               )
+            ]
+          )
 
   if info:
     li.setInfo("Video", info)
@@ -362,5 +391,7 @@ elif ARG_MODE == MODE_BESTOF_CATEGORIES:
   viewBestOfCategories()
 elif ARG_MODE == MODE_BESTOF_CATEGORY:
   viewBestOfCategory(ARG_URL)
+elif ARG_MODE == MODE_PLAYLIST_MANAGER:
+  viewManagePlaylist(ARG_PARAMS.get("action"))
 
 xbmcplugin.endOfDirectory(PLUGIN_HANDLE)

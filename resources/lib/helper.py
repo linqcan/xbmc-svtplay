@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import xbmcaddon
-import CommonFunctions
+import json
 import re
 import urllib
 
-common = CommonFunctions
+import xbmcaddon
+import CommonFunctions as common
+
 addon = xbmcaddon.Addon("plugin.video.svtplay")
 THUMB_SIZE = "extralarge"
 
@@ -234,19 +235,27 @@ def getHighBw(low):
   i = BANDWIDTH.index(low)
   return BANDWIDTH[i+1]
 
+def getJsonObj(show_url):
+  """
+  Returns a SVT JSON object from a show URL
+  """
+  url_obj = urllib.urlopen(show_url)
+  json_obj = json.load(url_obj)
+  url_obj.close()
+  return json_obj
+
 
 def getVideoUrl(json_obj):
   """
   Returns the video URL from a SVT JSON object.
   """
-  url = None
+  video_url = None
 
   for video in json_obj["video"]["videoReferences"]:
     if video["playerType"] == "ios":
-      url = video["url"]
+      video_url = video["url"]
 
-  return url
-
+  return video_url
 
 def getSubtitleUrl(json_obj):
   """
