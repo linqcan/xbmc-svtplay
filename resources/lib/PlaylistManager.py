@@ -13,7 +13,6 @@ def add(url, title, thumbnail):
   __playlist.add(list_item.getProperty("url"), list_item)
 
 def remove(list_item):
-  print list_item.getfilename()
   __playlist.remove(list_item.getfilename())
 
 def clear():
@@ -32,7 +31,6 @@ def getPlaylistAsListItems():
   while i < size:
     list_item = __playlist.__getitem__(i)
     list_item.setProperty("id", str(i))
-    print list_item.getLabel()
     items.append(list_item)
     i = i + 1
   
@@ -68,7 +66,6 @@ def __get_video_url(url):
 # To support XBMC.RunScript
 if __name__ == "__main__":
   print("PLM called as script!")
-  print(str(sys.argv))
   if len(sys.argv) < 2:
     print "No argument given!"
   else:
