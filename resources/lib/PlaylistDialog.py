@@ -19,6 +19,9 @@ class PlaylistDialog(xbmcgui.WindowXMLDialog):
   def onInit(self):
     self.__list = self.getControl(4000)
     self.__loadList()
+    self.__setFocus()
+
+  def __setFocus(self):
     if self.__list.size() > 0:
       f_id = 4000
     else:
@@ -50,6 +53,7 @@ class PlaylistDialog(xbmcgui.WindowXMLDialog):
         item_id = sel_item.getProperty("id") 
         PlaylistManager.remove(int(item_id))
         self.__loadList()
+        self.__setFocus()
 
   def __loadList(self):
     items = PlaylistManager.getPlaylistAsListItems()
