@@ -50,8 +50,7 @@ class PlaylistDialog(xbmcgui.WindowXMLDialog):
       if c_id == 4000:
         # Remvove playlist item
         sel_item = self.__list.getSelectedItem()
-        item_id = sel_item.getProperty("id") 
-        PlaylistManager.remove(int(item_id))
+        PlaylistManager.remove(sel_item)
         self.__loadList()
         self.__setFocus()
 
