@@ -13,6 +13,7 @@ import resources.lib.bestofsvt as bestof
 import resources.lib.helper as helper
 import resources.lib.svt as svt
 import resources.lib.PlaylistManager as PlaylistManager
+from resources.lib.PlaylistDialog import PlaylistDialog
 
 MODE_CHANNELS = "kanaler"
 MODE_A_TO_O = "a-o"
@@ -64,25 +65,14 @@ def viewStart():
   addDirectoryItem(localize(30001), { "mode": MODE_CATEGORIES })
   addDirectoryItem(localize(30007), { "mode": MODE_BESTOF_CATEGORIES })
   addDirectoryItem(localize(30006), { "mode": MODE_SEARCH })
-  addDirectoryItem("Manage playlist", { "mode": MODE_PLAYLIST_MANAGER, "action": "view"})
+  addDirectoryItem("Playlist", { "mode": MODE_PLAYLIST_MANAGER }, folder=False)
 
 
-def viewManagePlaylist(action):
-  
-  if action == "view":
-    items = PlaylistManager.getListItems()
-    for item in items:
-      addDirectoryItem(item["title"], { "mode": MODE_PLAYLIST_MANAGER, "action": "none"}, folder=False)
-    addDirectoryItem("Clear list", { "mode": MODE_PLAYLIST_MANAGER, "action": "clear"})
-    addDirectoryItem("Play list", { "mode": MODE_PLAYLIST_MANAGER, "action": "play"})
-  elif action == "clear":
-    # Hacky hack
-    common.log("Clear playlist")
-    PlaylistManager.clear()
-    xbmcplugin.endOfDirectory(PLUGIN_HANDLE, updateListing=True)
-  elif action == "play":
-    PlaylistManager.play()
-  
+def viewManagePlaylist():
+  plm_dialog = PlaylistDialog()
+  plm_dialog.doModal()
+  del plm_dialog
+
 def viewAtoO():
   programs = svt.getAtoO()
   
@@ -392,6 +382,6 @@ elif ARG_MODE == MODE_BESTOF_CATEGORIES:
 elif ARG_MODE == MODE_BESTOF_CATEGORY:
   viewBestOfCategory(ARG_URL)
 elif ARG_MODE == MODE_PLAYLIST_MANAGER:
-  viewManagePlaylist(ARG_PARAMS.get("action"))
+  viewManagePlaylist()
 
 xbmcplugin.endOfDirectory(PLUGIN_HANDLE)

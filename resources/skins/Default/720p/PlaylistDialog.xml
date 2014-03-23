@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<window type="dialog">
+  <allowoverlay>no</allowoverlay>
+  <coordinates>
+    <system>1</system>
+    <posx>300</posx>
+    <posy>50</posy>
+  </coordinates>
+  <animation effect="slide" start="560,0" end="0,0" time="250">WindowOpen</animation>
+  <animation effect="slide" start="0,0" end="560,0" time="250">WindowClose</animation> 
+  <controls>
+    <control type="image">
+      <description>Background</description>
+      <posx>0</posx>
+      <posy>0</posy>
+      <width>500</width>
+      <height>400</height>
+      <texture>playlist-background.png</texture>
+    </control>
+    <control type="label">
+      <posx>0</posx>
+      <posy>0</posy>
+      <left>30</left>
+      <width>300</width>
+      <height>20</height>
+      <font>font16</font>
+      <textcolor>ffffffff</textcolor>
+      <label>Playlist</label>
+    </control>
+    <control type="list" id="4000">
+      <posx>0</posx>
+      <posy>40</posy>
+      <width>500</width>
+      <height>300</height>
+      <ondown>4001</ondown>
+      <orientation>vertical</orientation>
+      <viewtype>list</viewtype>
+      <itemlayout width="500" height="30">
+        <control type="label">
+          <left>10</left>
+          <top>0</top>
+          <font>font11</font>
+          <textcolor>ffc0c0c0</textcolor>
+          <info>ListItem.Label</info>
+        </control>
+      </itemlayout>
+      <focusedlayout width="500" height="30">
+        <control type="label">
+          <left>10</left>
+          <top>0</top>
+          <font>font11</font>
+          <textcolor>green</textcolor>
+          <selectedcolor>green</selectedcolor>
+          <info>ListItem.Label</info>
+        </control>
+      </focusedlayout>
+    </control>
+    <control type="grouplist">
+      <top>340</top>
+      <left>10</left>
+      <orientation>horizontal</orientation>
+      <itemgap>10</itemgap>
+      <control type="button" id="4001">
+        <label>Clear all</label>
+        <width>100</width>
+        <onup>4000</onup>
+        <onleft>4003</onleft>
+        <onright>4002</onright>
+      </control>
+      <control type="button" id="4002">
+        <label>Close</label>
+        <width>100</width>
+        <onup>4000</onup>
+        <onleft>4001</onleft>
+        <onright>4003</onright>
+      </control>
+      <control type="button" id="4003">
+        <label>Play</label>
+        <width>100</width>
+        <onup>4000</onup>
+        <onleft>4002</onleft>
+        <onright>4001</onright>
+      </control>
+    </control>
+  </controls>
+</window>

@@ -34,6 +34,13 @@ def add(url, title, thumbnail):
       )
   __save_to_file()
 
+def remove(item_id):
+  if item_id < 0 or item_id > len(__playlist.contents["items"]):
+    print("Illegal item id "+str(item_id))
+    return
+  del(__playlist.contents["items"][item_id])
+  __save_to_file()
+
 def __load_from_file():
   """
   Loads a playlist from disk
@@ -67,11 +74,29 @@ def clear():
   __playlist.contents["items"] = []
   __save_to_file()
 
-def getListItems():
+def getPlaylist():
   if not __playlist.loaded:
     __load_from_file()
 
   return __playlist.contents["items"]
+
+def getPlaylistAsListItems():
+  """
+  Returns the playlist as a list of xbmc.ListItems
+  """
+  if not __playlist.loaded:
+    __load_from_file()
+
+  items = []
+  for index, item in enumerate(__playlist.contents["items"]):
+    list_item = xbmcgui.ListItem(
+        label=item["title"],
+        path=item["url"],
+        thumbnailImage=item["thumbnail"])
+    list_item.setProperty("id", str(index))
+    items.append(list_item)
+  
+  return items
 
 def play():
   """
@@ -81,6 +106,8 @@ def play():
     __load_from_file()
 
   playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+  # Clear the current playlist first
+  playlist.clear()
   for item in __playlist.contents["items"]:
     list_item = xbmcgui.ListItem(item["title"])
     list_item.setThumbnailImage(item["thumbnail"])
