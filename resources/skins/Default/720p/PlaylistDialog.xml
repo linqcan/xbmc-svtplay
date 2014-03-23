@@ -23,7 +23,7 @@
       <width>300</width>
       <font>font24_title</font>
       <textcolor>ffffffff</textcolor>
-      <label>Playlist</label>
+      <label>$ADDON[plugin.video.svtplay 30400]</label>
     </control>
     <control type="list" id="4000">
       <top>50</top>
@@ -59,7 +59,7 @@
       <orientation>horizontal</orientation>
       <itemgap>10</itemgap>
       <control type="button" id="4001">
-        <label>Clear all</label>
+        <label>$ADDON[plugin.video.svtplay 30401]</label>
         <align>center</align>
         <width>100</width>
         <onup>4000</onup>
@@ -67,7 +67,7 @@
         <onright>4002</onright>
       </control>
       <control type="button" id="4002">
-        <label>Close</label>
+        <label>$ADDON[plugin.video.svtplay 30402]</label>
         <align>center</align>
         <width>100</width>
         <onup>4000</onup>
@@ -75,7 +75,7 @@
         <onright>4003</onright>
       </control>
       <control type="button" id="4003">
-        <label>Play</label>
+        <label>$ADDON[plugin.video.svtplay 30403]</label>
         <align>center</align>
         <width>100</width>
         <onup>4000</onup>

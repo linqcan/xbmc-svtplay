@@ -65,7 +65,7 @@ def viewStart():
   addDirectoryItem(localize(30001), { "mode": MODE_CATEGORIES })
   addDirectoryItem(localize(30007), { "mode": MODE_BESTOF_CATEGORIES })
   addDirectoryItem(localize(30006), { "mode": MODE_SEARCH })
-  addDirectoryItem("Playlist", { "mode": MODE_PLAYLIST_MANAGER }, folder=False)
+  addDirectoryItem(localize(30400), { "mode": MODE_PLAYLIST_MANAGER }, folder=False)
 
 
 def viewManagePlaylist():
@@ -329,7 +329,7 @@ def addDirectoryItem(title, params, thumbnail = None, folder = True, live = Fals
       li.addContextMenuItems(
             [
               (
-                "Add to playlist",
+                localize(30404),
                 "XBMC.RunScript("+plm_script+", "+plm_action+", "+params["url"]+", "+title+", "+thumbnail+")"
                )
             ]
