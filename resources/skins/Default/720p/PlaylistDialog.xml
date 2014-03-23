@@ -36,6 +36,7 @@
         <control type="label">
           <font>font11</font>
           <textcolor>ffc0c0c0</textcolor>
+          <selectedcolor>green</selectedcolor>
           <info>ListItem.Label</info>
         </control>
       </itemlayout>
@@ -49,6 +50,7 @@
         <control type="label">
           <font>font11</font>
           <textcolor>ffffffff</textcolor>
+          <selectedcolor>green</selectedcolor>
           <info>ListItem.Label</info>
         </control>
       </focusedlayout>
