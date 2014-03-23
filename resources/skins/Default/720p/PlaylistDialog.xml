@@ -15,53 +15,52 @@
       <posy>0</posy>
       <width>500</width>
       <height>400</height>
-      <texture>playlist-background.png</texture>
+      <texture border="9">playlist-background.png</texture>
     </control>
     <control type="label">
-      <posx>0</posx>
-      <posy>0</posy>
-      <left>30</left>
+      <top>10</top>
+      <left>20</left>
       <width>300</width>
-      <height>20</height>
-      <font>font16</font>
+      <font>font24_title</font>
       <textcolor>ffffffff</textcolor>
       <label>Playlist</label>
     </control>
     <control type="list" id="4000">
-      <posx>0</posx>
-      <posy>40</posy>
-      <width>500</width>
+      <top>50</top>
+      <left>20</left>
       <height>300</height>
       <ondown>4001</ondown>
       <orientation>vertical</orientation>
       <viewtype>list</viewtype>
-      <itemlayout width="500" height="30">
+      <itemlayout width="460" height="30">
         <control type="label">
-          <left>10</left>
-          <top>0</top>
           <font>font11</font>
           <textcolor>ffc0c0c0</textcolor>
           <info>ListItem.Label</info>
         </control>
       </itemlayout>
-      <focusedlayout width="500" height="30">
+      <focusedlayout width="460" height="30">
+        <control type="image">
+          <width>460</width>
+          <height>30</height>
+          <visible>Control.HasFocus(4000)</visible>
+          <texture>playlist-item-focused.png</texture>
+        </control>
         <control type="label">
-          <left>10</left>
-          <top>0</top>
           <font>font11</font>
-          <textcolor>green</textcolor>
-          <selectedcolor>green</selectedcolor>
+          <textcolor>ffffffff</textcolor>
           <info>ListItem.Label</info>
         </control>
       </focusedlayout>
     </control>
     <control type="grouplist">
-      <top>340</top>
-      <left>10</left>
+      <top>350</top>
+      <left>100</left>
       <orientation>horizontal</orientation>
       <itemgap>10</itemgap>
       <control type="button" id="4001">
         <label>Clear all</label>
+        <align>center</align>
         <width>100</width>
         <onup>4000</onup>
         <onleft>4003</onleft>
@@ -69,6 +68,7 @@
       </control>
       <control type="button" id="4002">
         <label>Close</label>
+        <align>center</align>
         <width>100</width>
         <onup>4000</onup>
         <onleft>4001</onleft>
@@ -76,6 +76,7 @@
       </control>
       <control type="button" id="4003">
         <label>Play</label>
+        <align>center</align>
         <width>100</width>
         <onup>4000</onup>
         <onleft>4002</onleft>
