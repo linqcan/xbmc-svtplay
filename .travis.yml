@@ -1,0 +1,13 @@
+language:
+  python
+
+branches:
+  only:
+    - gotham-ci
+
+python:
+  - "2.7"
+
+script:
+  - cd tests
+  - python -m unittest testSvt
