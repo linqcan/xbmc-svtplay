@@ -91,12 +91,3 @@ class Common:
         else:
             dialog = xbmcgui.Dialog()
             dialog.ok("SVT Play", self.localize(30100))
-
-    def view_episodes(self, episodes):
-        """
-        Displays the episodes for a program
-        """
-        if episodes is None:
-            logging.log("No episodes found")
-            return
-        self.create_dir_items(episodes)

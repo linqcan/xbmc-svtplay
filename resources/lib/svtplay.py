@@ -94,7 +94,7 @@ class SvtPlay:
         elif mode == self.MODE_CATEGORY:
             self.view_category(url)
         elif mode == self.common.MODE_PROGRAM:
-            self.view_episodes(url)
+            self.view_video_content(url)
         elif mode == self.common.MODE_VIDEO:
             self.start_video(url)
         elif mode == self.MODE_POPULAR or \
@@ -189,11 +189,11 @@ class SvtPlay:
             return
         self.common.create_dir_items(play_items)
 
-    def view_episodes(self, url):
+    def view_video_content(self, url):
         slug = url.split("/")[-1]
         logging.log("View episodes for {}".format(slug))
         episodes = self.graphql.getVideoContent(slug)
-        self.common.view_episodes(episodes)
+        self.common.create_dir_items(episodes)
 
     def view_search(self):
         keyword = helper.getInputFromKeyboard(self.localize(30102))
