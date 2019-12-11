@@ -130,6 +130,9 @@ class GraphQL:
           "duration" : item.get("duration", 0)
         }
         video_item = VideoItem(title, video_id, thumbnail, geo_restricted, info, fanart)
+        if "validFrom" in item:
+          # Clips don't have validFrom
+          video_item.setValidFrom(item["validFrom"])
         video_items.append(video_item)
     return video_items
 
