@@ -31,11 +31,11 @@ class VideoItem(PlayItem):
     """
     def __init__(self, title, video_id, thumbnail, geo_restricted, info={}, fanart=""):
         super(VideoItem, self).__init__(title, video_id, PlayItem.VIDEO_ITEM, thumbnail, geo_restricted, info, fanart)
-        self.validFrom = None
+        self.valid_from = None
     
     def setValidFrom(self, date_str):
         try:
-            self.validFrom = parse(date_str)
+            self.valid_from = parse(date_str)
         except:
             raise ValueError("{} is not a supported date string. Expected the following format \"2019-11-02T02:00:00+01:00\"".format(date_str))
 
