@@ -1,6 +1,8 @@
 from __future__ import absolute_import,unicode_literals
 import xbmcgui # pylint: disable=import-error
 import xbmcplugin # pylint: disable=import-error
+from datetime import datetime
+from dateutil.tz import tzlocal
 
 from resources.lib.playback import Playback
 from resources.lib.listing.listitem import PlayItem
@@ -63,11 +65,15 @@ class Common:
         params["mode"] = self.MODE_PROGRAM if play_item.item_type == PlayItem.SHOW_ITEM else self.MODE_VIDEO
         params["url"] = play_item.id
         folder = False
-        if play_item.item_type == PlayItem.SHOW_ITEM:
+        is_show = play_item.item_type == PlayItem.SHOW_ITEM
+        if is_show:
             folder = True
         info = None
         if self.is_geo_restricted(play_item):
             logging.log("Hiding geo restricted item {} as setting is on".format(play_item.title))
+            return
+        if not is_show and play_item.valid_from and self.is_not_available_yet(play_item.valid_from):
+            logging.log("Hiding not yet available item {}".format(play_item.title))
             return
         info = play_item.info
         fanart = play_item.fanart if play_item.item_type == PlayItem.VIDEO_ITEM else ""
@@ -77,6 +83,13 @@ class Common:
         return play_item.geo_restricted and \
             self.settings.geo_restriction
     
+    def is_not_available_yet(self, valid_from):
+        """
+        valid_from is a time zone aware datetime object
+        """
+        now = datetime.now(tzlocal())
+        return valid_from > now
+
     def start_video(self, video_json):
         if video_json is None:
             logging.log("ERROR: Could not get video JSON")
